@@ -27,15 +27,15 @@ function getMostPopularBooks(books) {
   let popularBooks = [];
   books.forEach((book) => popularBooks.push({name: book.title, count: book.borrows.length}));
   let popularBooksLimit = popularBooks.sort((bookOne, bookTwo) => bookOne.count < bookTwo.count ? 1 : -1);
-  popularBooksLimit.length = Math.min(popularBooksLimit.length, 5);
-  return popularBooksLimit;
+  return limit(popularBooks, 5);
 }
 
 function getMostPopularAuthors(books, authors) {
   let popularAuthors = [];
   authors.forEach((author) =>{
-    let id = author.id;
-    let authName = author.name.first + " " + author.name.last;
+    const{id, name} = author;
+    const{first, last} = name;
+    let authName = first + " " + last;
     books.forEach((book) => {
       if(id === book.authorId){
         let popCount = book.borrows.length;
@@ -46,8 +46,12 @@ function getMostPopularAuthors(books, authors) {
     });
   });
   popularAuthors = popularAuthors.sort((author1, author2) => author1.count < author2.count ? 1 : -1);
-  popularAuthors.length = Math.min(popularAuthors.length, 5);
-  return popularAuthors;
+  return limit(popularAuthors, 5);
+}
+
+function limit(arr, limit){
+  arr.length = Math.min(arr.length, limit);
+  return arr
 }
 
 module.exports = {
